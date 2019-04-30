@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="DML_master" author="marvin">
+
+        <sql>
+
+            INSERT INTO maintenance VALUES(1,'Вулканизация'),
+                                          (2,'Перебортовка'),
+                                          (3,'Установка жгута'),
+                                          (4,'Балансировка'),
+                                          (5,'Выравнивание обода'),
+                                          (6,'Установка заплаток'),
+                                          (7,'Накачка колёс');
+
+
+            INSERT INTO service_center VALUES(1,'ШинПро','Россия','Томск','Переулок 1905 г 15а'),
+                                             (2,'Дорожник','Россия','Воронеж','Киевская 28'),
+                                             (3,'ШШШ','Россия','Воронеж','Киевская 28');
+
+
+
+            INSERT INTO service_center_maintenance VALUES(1,1,1),
+                                                         (2,1,2),
+                                                         (3,1,3),
+                                                         (4,1,4),
+                                                         (5,2,3),
+                                                         (6,2,4),
+                                                         (7,2,1);
+        </sql>
+
+    </changeSet>
+</databaseChangeLog>

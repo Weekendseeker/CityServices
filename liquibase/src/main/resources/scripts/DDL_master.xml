@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="DDL_master" author="marvin">
+       <sql>
+           CREATE TABLE IF NOT EXISTS maintenance
+           (
+                id INTEGER  auto_increment primary key,
+                discription VARCHAR(200)
+           );
+
+           CREATE TABLE IF NOT EXISTS service_center
+           (
+                id INTEGER  auto_increment primary key,
+                name VARCHAR(100),
+                country_name VARCHAR(100),
+                city_name VARCHAR(100),
+                address VARCHAR(200),
+
+           );
+
+           CREATE TABLE IF NOT EXISTS service_center_maintenance
+           (
+
+                id INTEGER  AUTO_INCREMENT PRIMARY KEY,
+                service_center_id INTEGER NOT NULL,
+                maintenance_id INTEGER NOT NULL ,
+
+                FOREIGN KEY (maintenance_id) REFERENCES maintenance,
+                FOREIGN KEY (service_center_id) REFERENCES service_center
+
+           );
+
+       </sql>
+
+    </changeSet>
+</databaseChangeLog>

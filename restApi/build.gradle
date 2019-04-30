@@ -1,0 +1,46 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName ="org.marvin.Main"
+
+repositories{
+
+    mavenLocal()
+    mavenCentral()
+
+}
+
+dependencies {
+    
+    compile group: 'org.springframework', name: 'spring-orm', version: '5.1.6.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.1.4.RELEASE'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.1.4.RELEASE'
+    compile group: 'com.h2database', name: 'h2', version: '1.4.197'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.4.2.Final'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.4.2'
+
+}
+
+jar {
+    //name = 'restApi'
+    version =  '0.1.0'
+    manifest.attributes("Main-Class": mainClassName)
+
+    from {
+        configurations.compile.collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    }
+    
+    printConf()
+}
+
+def printConf(){
+    
+    print "########################/DEPENDENCIES LIST/######################################"
+    configurations.compile.collect{it ->
+        println it.getName()
+    }
+}
+
+

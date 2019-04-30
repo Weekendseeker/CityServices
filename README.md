@@ -23,7 +23,7 @@
    При помощи консольного _http_ клиента _curl_
      * >> curl -X PUT localhost:8787/updateServiceCenter -H 'Content-type:application/json' -d '{"id": 100,"name": "ШинПро","cityName": "Томск","countryName": "Россия","address": "Переулок 1905 г 15а","maintenances": []}'  
      
-       Запрос удаляет все услуги сервисного центра.
+       Запрос обновит информацию о сервисном центре. В данном случа очистит список услуг.
    *  _http://localhost:8787/addServiceCenter_ - _POST_ Запрос на добавления нового сервисного центра. 
         * >> curl -X POST localhost:8787/addServiceCenter -H 'Content-type:application/json' -d '{"name":"OбоD","cityName":"Астрахань","countryName":"Россия","address":"Кулёва 19 29а","maintenances":[{"id":3,"descr":"Установка жгута"},{"id":2,"descr":"Перебортовка"},{"id":1,"descr":"Вулканизация"},{"id":4,"descr":"Балансировка"}]}'
    

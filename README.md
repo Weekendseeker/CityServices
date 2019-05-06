@@ -8,7 +8,7 @@
 >> _gradle clean build task fillDb update_   
 
   Cоберётся проект,а затем liquibase создаст таблицы и внесёт в них данные.  
-  В качестве базы данных используется H2.Адрес:  
+  В качестве базы данных используется H2. Адрес:  
   >>_jdbc:h2:~/servicesBD_
 
 * Далее можно запустить приложение. После запуска будет поднят сервер на
@@ -21,12 +21,11 @@
    * _http://localhost:8787/getMaintaincies_ - Список возможных услуг
    * _http://localhost:8787/getServiceCenterById_ - _GET_   Запрос на получение информации по сервисному центру по ID
      * >>_http://localhost:8787/getServiceCenterById?id=2_ 
-   * _http://localhost:8787/updateServiceCenter_ - _PUT_ Запрос на обновление данных сервисного центра. Все следующие запросы будут выполнены  
-   При помощи консольного _http_ клиента _curl_
+   * _http://localhost:8787/updateServiceCenter_ - _PUT_ Запрос на обновление данных сервисного центра. Все следующие запросы будут выполнены при помощи консольного _http_ клиента _curl_ 
      * >> curl -X PUT localhost:8787/updateServiceCenter -H 'Content-type:application/json' -d '{"id": 100,"name": "ШинПро","cityName": "Томск","countryName": "Россия","address": "Переулок 1905 г 15а","maintenances": []}'  
      
-       Запрос обновит информацию о сервисном центре. В данном случа очистит список услуг.
-   *  _http://localhost:8787/addServiceCenter_ - _POST_ Запрос на добавления нового сервисного центра. 
+       Запрос обновит информацию о сервисном центре. В данном случаe, очистит список услуг.
+   *  _http://localhost:8787/addServiceCenter_ - _POST_ Запрос на добавление нового сервисного центра. 
         * >> curl -X POST localhost:8787/addServiceCenter -H 'Content-type:application/json' -d '{"name":"OбоD","cityName":"Астрахань","countryName":"Россия","address":"Кулёва 19 29а","maintenances":[{"id":3,"descr":"Установка жгута"},{"id":2,"descr":"Перебортовка"},{"id":1,"descr":"Вулканизация"},{"id":4,"descr":"Балансировка"}]}'
    
    * _http://localhost:8787/updateServiceCenter_ - _DELETE_ запрос на удаление сервисного центра.  

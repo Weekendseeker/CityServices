@@ -62,6 +62,8 @@ public class CityDaoImpl extends DataBaseConnector implements CitiesDao {
     @Override
     public void update(City city) {
 
+        validateAtributes(city);
+
         Session session = openSession();
         session.beginTransaction();
 
@@ -74,12 +76,14 @@ public class CityDaoImpl extends DataBaseConnector implements CitiesDao {
     }
 
     @Override
-    public void insert(City country) {
+    public void insert(City city) {
+
+        validateAtributes(city);
 
         Session session = openSession();
         session.beginTransaction();
 
-        session.update(country);
+        session.save(city);
 
         session.getTransaction().commit();
 
@@ -88,6 +92,8 @@ public class CityDaoImpl extends DataBaseConnector implements CitiesDao {
 
     @Override
     public void deleteById(long id) {
+
+        getCityById(id);
 
         Session session = openSession();
         session.beginTransaction();

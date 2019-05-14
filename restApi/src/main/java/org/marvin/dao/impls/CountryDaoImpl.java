@@ -60,21 +60,7 @@ public class CountryDaoImpl extends DataBaseConnector implements CountryDao {
     @Override
     public void update(Country country) {
 
-        Country resCountry = getCountryById(country.getId());
-
-        Session session = openSession();
-        session.beginTransaction();
-
-        session.update(resCountry);
-
-        session.getTransaction().commit();
-
-        closeSession(session);
-
-    }
-
-    @Override
-    public void insert(Country country) {
+        validateAtributes(country);
 
         Session session = openSession();
         session.beginTransaction();
@@ -88,7 +74,25 @@ public class CountryDaoImpl extends DataBaseConnector implements CountryDao {
     }
 
     @Override
+    public void insert(Country country) {
+
+        validateAtributes(country);
+
+        Session session = openSession();
+        session.beginTransaction();
+
+        session.save(country);
+
+        session.getTransaction().commit();
+
+        closeSession(session);
+
+    }
+
+    @Override
     public void deleteById(long id) {
+
+        getCountryById(id);
 
         Session session = openSession();
         session.beginTransaction();
@@ -109,5 +113,4 @@ public class CountryDaoImpl extends DataBaseConnector implements CountryDao {
 
         return true;
     }
-
 }

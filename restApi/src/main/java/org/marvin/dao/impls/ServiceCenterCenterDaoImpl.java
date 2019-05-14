@@ -28,12 +28,12 @@ public class ServiceCenterCenterDaoImpl extends DataBaseConnector implements Ser
     private CitiesDao cityDao;
 
     @Override
-    public List<ServiceCenter> getAllServiceCenters()  {
+    public List<ServiceCenter> getAllServiceCenters() {
 
         Session session = openSession();
-        List<ServiceCenter> result = (List<ServiceCenter>)session.createQuery(" FROM SERVICE_CENTER").getResultList();
+        List<ServiceCenter> result = (List<ServiceCenter>) session.createQuery(" FROM SERVICE_CENTER").getResultList();
 
-        for (ServiceCenter serviceCenter: result){
+        for (ServiceCenter serviceCenter : result) {
 
             Hibernate.initialize(serviceCenter.getLocations());
             Hibernate.initialize(serviceCenter.getMaintenancies());
@@ -41,7 +41,7 @@ public class ServiceCenterCenterDaoImpl extends DataBaseConnector implements Ser
 
         closeSession(session);
 
-        return result ;
+        return result;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class ServiceCenterCenterDaoImpl extends DataBaseConnector implements Ser
         Session session = openSession();
 
         Query query = session.createQuery("FROM  SERVICE_CENTER WHERE ID = :id");
-        query.setParameter("id",id);
+        query.setParameter("id", id);
 
         ServiceCenter serviceCenter = (ServiceCenter) query.getSingleResult();
 
@@ -65,12 +65,9 @@ public class ServiceCenterCenterDaoImpl extends DataBaseConnector implements Ser
     @Override
     public void createServiceCenter(ServiceCenter serviceCenter) {
 
-        if(!validateAtributes(serviceCenter)) throw new ValidationException("Error with validation");
+        if (!validateAtributes(serviceCenter)) throw new ValidationException("Error with validation");
 
         Session session = openSession();
-
-
-
         session.beginTransaction();
 
         session.save(serviceCenter);
@@ -83,7 +80,7 @@ public class ServiceCenterCenterDaoImpl extends DataBaseConnector implements Ser
     @Override
     public void updateServiceCenter(ServiceCenter serviceCenter) {
 
-        if(!validateAtributes(serviceCenter)) throw new ValidationException("Error with validation");
+        if (!validateAtributes(serviceCenter)) throw new ValidationException("Error with validation");
 
         Session session = openSession();
         session.beginTransaction();
@@ -104,7 +101,7 @@ public class ServiceCenterCenterDaoImpl extends DataBaseConnector implements Ser
         session.beginTransaction();
 
         Query query = session.createQuery("DELETE FROM SERVICE_CENTER WHERE ID = :id ");
-        query.setParameter("id",id);
+        query.setParameter("id", id);
 
         query.executeUpdate();
 
@@ -114,22 +111,21 @@ public class ServiceCenterCenterDaoImpl extends DataBaseConnector implements Ser
     }
 
 
-    public boolean validateAtributes(ServiceCenter center){
+    public boolean validateAtributes(ServiceCenter center) {
 
         try {
-
-            for(Location location : center.getLocations()) {
-                    cityDao.validateAtributes(location.getCity());
-                    countryDao.validateAtributes(location.getCountry());
+            for (Location location : center.getLocations()) {
+                cityDao.validateAtributes(location.getCity());
+                countryDao.validateAtributes(location.getCountry());
             }
 
-            for (Maintenance maintenance : center.getMaintenancies()){
-                    maintenanceDao.validateAtributes(maintenance);
+            for (Maintenance maintenance : center.getMaintenancies()) {
+                maintenanceDao.validateAtributes(maintenance);
             }
 
             return true;
 
-        }catch (NoResultException | IllegalArgumentException e){
+        } catch (NoResultException | IllegalArgumentException e) {
             return false;
         }
     }

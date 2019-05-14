@@ -41,10 +41,12 @@ public class MaintenanceDaoImpl extends DataBaseConnector implements Maintenance
     @Override
     public void insert(Maintenance maintenance) {
 
+        validateAtributes(maintenance);
+
         Session session = openSession();
         session.beginTransaction();
 
-        session.update(maintenance);
+        session.save(maintenance);
 
         session.getTransaction().commit();
 
@@ -54,6 +56,8 @@ public class MaintenanceDaoImpl extends DataBaseConnector implements Maintenance
 
     @Override
     public void update(Maintenance maintenance) {
+
+        validateAtributes(maintenance);
 
         Session session = openSession();
         session.beginTransaction();
@@ -68,6 +72,8 @@ public class MaintenanceDaoImpl extends DataBaseConnector implements Maintenance
 
     @Override
     public void deleteById(long id){
+
+        getMaintenanceById(id);
 
         Session session = openSession();
 
@@ -89,5 +95,4 @@ public class MaintenanceDaoImpl extends DataBaseConnector implements Maintenance
 
         return true;
     }
-
 }

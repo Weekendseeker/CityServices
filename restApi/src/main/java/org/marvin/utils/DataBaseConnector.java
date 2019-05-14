@@ -20,12 +20,9 @@ public class DataBaseConnector {
 
     protected Session openSession(){
 
-
         Session session = sessionFactory.openSession();
-        System.out.println();
 
         if( !session.isConnected() || !session.isOpen() || session == null)throw new SessionException("Opps try to late");
-
 
         sessionsList.add(session);
 

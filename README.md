@@ -5,7 +5,7 @@
 Инструкция:
 
 * Для начала нужно собрать проект выполнив следующую команду.  
->> _gradle clean build task fillDb update_   
+>> _gradle clean build  
 
   Cоберётся проект,а затем liquibase создаст таблицы и внесёт в них данные.  
   В качестве базы данных используется H2. Адрес:  
@@ -16,17 +16,83 @@
     server.port=8787_ 
 
 * После старта сервера можно делать HTTP запросы по следующим URL:  
-   * _http://localhost:8787/serviceList_ - Информация о всех сервисных центрах
-   * _http://localhost:8787/getCities_ - Список городов в которых располагаются сервисные центры
-   * _http://localhost:8787/getMaintaincies_ - Список возможных услуг
+   * _http://localhost:8787/serviceList_ - Информация о всех сервисных центра  
+   * _http://localhost:8787/citiesList - Список городов 
+   * _http://localhost:8787/maintainciesList - Список возможных услуг
+   * _http://localhost:8787/countriesList - Список стран
    * _http://localhost:8787/getServiceCenterById_ - _GET_   Запрос на получение информации по сервисному центру по ID
-     * >>_http://localhost:8787/getServiceCenterById?id=2_ 
+     * >>_http://localhost:8787/getServiceCenterById?id=1 
    * _http://localhost:8787/updateServiceCenter_ - _PUT_ Запрос на обновление данных сервисного центра. Все следующие запросы будут выполнены при помощи консольного _http_ клиента _curl_ 
-     * >> curl -X PUT localhost:8787/updateServiceCenter -H 'Content-type:application/json' -d '{"id": 100,"name": "ШинПро","cityName": "Томск","countryName": "Россия","address": "Переулок 1905 г 15а","maintenances": []}'  
+     * >>{
+          "name":"Альбатрос",
+         "maintenancies":[
+         {
+            "id":1,
+      "descr":"Вулканизация"
+    },
+    {
+      "id":2,	
+      "descr":"Перебортовка"
+    },
+             {
+            "id":3,
+      "descr":"Установка жгута"
+    },
+    {
+      "id":5,	
+      "descr":"Выравнивание обода"
+    }
+  ],
+  "locations":[
+    {
+      "country":{
+      	"id":1,
+        "name":"Russia"
+      },
+      "city":{
+      	"id":2,
+        "name":"Moscow"
+      },
+      "cityAddress":{
+      	"id":6,
+        "streetName":"Lenina 5",
+        "streetMark":"3"
+      }
+    }
+  ]
+}
      
-       Запрос обновит информацию о сервисном центре. В данном случаe, очистит список услуг.
-   *  _http://localhost:8787/addServiceCenter_ - _POST_ Запрос на добавление нового сервисного центра. 
-        * >> curl -X POST localhost:8787/addServiceCenter -H 'Content-type:application/json' -d '{"name":"OбоD","cityName":"Астрахань","countryName":"Россия","address":"Кулёва 19 29а","maintenances":[{"id":3,"descr":"Установка жгута"},{"id":2,"descr":"Перебортовка"},{"id":1,"descr":"Вулканизация"},{"id":4,"descr":"Балансировка"}]}'
    
+   *  _http://localhost:8787/addServiceCenter_ - _POST_ Запрос на добавление нового сервисного центра. 
+        * >> { {
+  "name":"Альбатрос",
+  "maintenancies":[
+    {
+      "id":1,
+      "descr":"Вулканизация"
+    },
+    {
+      "id":2,	
+      "descr":"Перебортовка"
+    }
+  ],
+  "locations":[
+    {
+      "country":{
+      	"id":1,
+        "name":"Russia"
+      },
+      "city":{
+      	"id":1,
+        "name":"Томск"
+      },
+      "cityAddress":{
+      	"id":12,
+        "streetName":"Chernih",
+        "streetMark":"3"
+      }
+    }
+  ]
+}
    * _http://localhost:8787/updateServiceCenter_ - _DELETE_ запрос на удаление сервисного центра.  
-       * >>curl -X DELETE localhost:8787/deleteServiceCenter -H 'Content-type:application/json' -d '{"id":100}'
+       * >> localhost:8787/deleteServiceCenterById?id=1 

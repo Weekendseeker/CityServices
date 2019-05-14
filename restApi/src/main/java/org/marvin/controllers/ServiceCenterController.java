@@ -1,122 +1,181 @@
 package org.marvin.controllers;
 
+import org.marvin.dao.CitiesDao;
+import org.marvin.dao.CountryDao;
 import org.marvin.dao.MaintenanceDao;
 import org.marvin.dao.ServicesCenterDao;
 
-import org.marvin.models.Maintenance;
-import org.marvin.models.ServiceCenter;
+import org.marvin.models.entities.*;
 import org.marvin.models.responses.GetCitiesResponse;
+import org.marvin.models.responses.GetCountriesResponses;
 import org.marvin.models.responses.GetMaintenanciesResponse;
 import org.marvin.models.responses.GetServiceCenterListResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.persistence.NoResultException;
+import javax.validation.Valid;
+import java.util.*;
 
 @RestController
-
 public class ServiceCenterController {
 
     private ServicesCenterDao servicesDao;
-
     private MaintenanceDao maintenanceDao;
-
-
-
+    private CitiesDao cityDao;
+    private CountryDao countryDao;
 
     //Получение списка данных о всех сервис центрах
     @RequestMapping(value = "/serviceList", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<GetServiceCenterListResponse> getServiceCenterList(){
+    public ResponseEntity<GetServiceCenterListResponse> serviceCenterList() {
 
         List<ServiceCenter> serviceCenter = servicesDao.getAllServiceCenters();
 
-        if(serviceCenter == null || serviceCenter.isEmpty())
+        if (serviceCenter == null || serviceCenter.isEmpty())
             return new ResponseEntity("ServiceCenter's not yet", HttpStatus.BAD_REQUEST);
 
         GetServiceCenterListResponse sclr = new GetServiceCenterListResponse();
         sclr.setServiceCenter(serviceCenter);
 
-        return new ResponseEntity<>(sclr,HttpStatus.OK) ;
+        return new ResponseEntity<>(sclr, HttpStatus.OK);
     }
-
 
     //Получение сервиса по ID
     @RequestMapping(value = "/getServiceCenterById", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<ServiceCenter> getServiceCenterById(@RequestParam("id") String id ){
+    public ResponseEntity<ServiceCenter> getServiceCenterById(@RequestParam("id") String id) {
 
-        ServiceCenter serviceCenter = servicesDao.getServiceCenterById(Integer.parseInt(id));
-
-        if(serviceCenter == null)
+        ServiceCenter serviceCenter = null;
+        try {
+            try {
+                serviceCenter = servicesDao.getServiceCenterById(Integer.parseInt(id));
+            } catch (NoResultException e) {
+                return new ResponseEntity("Bab format id", HttpStatus.BAD_REQUEST);
+            }
+        } catch (NumberFormatException e) {
             return new ResponseEntity("ServiceCenter not found", HttpStatus.BAD_REQUEST);
+        }
 
-        return new ResponseEntity<>(serviceCenter, HttpStatus.OK );
+        return new ResponseEntity<>(serviceCenter, HttpStatus.OK);
     }
 
-
     //Получение списка городов в которых есть сервисы центры
-    @RequestMapping(value = "/getCities", method = RequestMethod.GET)
+    @RequestMapping(value = "/citiesList", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<GetCitiesResponse> getCities( ){
+    public ResponseEntity<GetCitiesResponse> citiesList() {
 
-        List<String> cities = servicesDao.getCities();
-        if(cities == null)
-            return new ResponseEntity("Cities not found", HttpStatus.BAD_REQUEST);
+        GetCitiesResponse getCitiesResponse;
 
-        GetCitiesResponse getCitiesResponse = new GetCitiesResponse();
-        getCitiesResponse.setCities(cities);
+        try {
+            List<City> cities = cityDao.cityList();
 
-        return new ResponseEntity<>(getCitiesResponse, HttpStatus.OK );
+            getCitiesResponse = new GetCitiesResponse();
+            getCitiesResponse.setCities(cities);
+
+        }catch (NoResultException e) {
+            return new ResponseEntity("Bab format id", HttpStatus.BAD_REQUEST);
+        }
+
+        return  new ResponseEntity<>(getCitiesResponse, HttpStatus.OK );
     }
 
     //Получение списка возможных услуг
-    @RequestMapping(value = "/getMaintaincies", method = RequestMethod.GET)
+    @RequestMapping(value = "/maintainciesList", method = RequestMethod.GET)
     @ResponseBody
-    public ResponseEntity<GetMaintenanciesResponse> getMaintaincies( ){
+    public ResponseEntity<GetMaintenanciesResponse> maintainciesList() {
 
-        List<Maintenance> maintenancies = maintenanceDao.getAllService();
+        GetMaintenanciesResponse maintenanciesResponse;
 
-        if(maintenancies == null)
-            return new ResponseEntity("Cities not found", HttpStatus.BAD_REQUEST);
+        try {
 
-        GetMaintenanciesResponse maintenanciesResponse = new GetMaintenanciesResponse();
-        maintenanciesResponse.setMaintenanciesList(maintenancies);
+            List<Maintenance> maintenancies = maintenanceDao.getAllMaintenancies();
 
-        return new ResponseEntity<>(maintenanciesResponse, HttpStatus.OK );
+            maintenanciesResponse = new GetMaintenanciesResponse();
+            maintenanciesResponse.setMaintenanciesList(maintenancies);
+
+        }catch (NoResultException e) {
+            return new ResponseEntity("Bab format id", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(maintenanciesResponse, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/countriesList", method = RequestMethod.GET)
+    @ResponseBody
+    public ResponseEntity<GetCountriesResponses> countriesList() {
+
+        GetCountriesResponses countriesResponses;
+
+        try {
+
+            List<Country> maintenancies = countryDao.countryList();
+
+            countriesResponses = new GetCountriesResponses();
+            countriesResponses.setCountries(maintenancies);
+
+        }catch (NoResultException e) {
+            return new ResponseEntity("Bab format id", HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(countriesResponses, HttpStatus.OK);
+    }
 
     //Добавление нового сервис центра
     @RequestMapping(value = "/addServiceCenter", method = RequestMethod.POST)
-    public String addServiceCenter(@RequestBody ServiceCenter serviceCenter){
-
+    @ResponseBody
+    public ResponseEntity<String> addServiceCenter(@Valid @RequestBody ServiceCenter serviceCenter) {
 
         servicesDao.createServiceCenter(serviceCenter);
 
-        return String.format("%s \n was created!\n", serviceCenter);
+        return new ResponseEntity<>(serviceCenter + "Was created!", HttpStatus.OK);
     }
 
     //Обновление существующего сервис центра
     @RequestMapping(value = "/updateServiceCenter", method = RequestMethod.PUT)
-    public String updateServiceCenter(@RequestBody ServiceCenter serviceCenter){
+    @ResponseBody
+    public String updateServiceCenter(@Valid @RequestBody ServiceCenter serviceCenter) {
 
         servicesDao.updateServiceCenter(serviceCenter);
 
         return String.format("%s \n was updated!\n", serviceCenter);
     }
+
     //Удаленин сервис центра
     @RequestMapping(value = "/deleteServiceCenter", method = RequestMethod.DELETE)
-    public String deleteServiceCenter(@RequestBody ServiceCenter serviceCenter){
+    @ResponseBody
+    public String deleteServiceCenterById(@RequestParam("id") String id) {
 
-        servicesDao.deleteServiceCenter(serviceCenter);
+        try {
 
-        return String.format("Service center with id %s  was deleted!\n", serviceCenter.getId());
+            servicesDao.deleteServiceCenterById(Long.parseLong(id));
+
+        } catch (NumberFormatException e) {
+            return "Id mast be number";
+        }catch (NoResultException e) {
+            return String.format("Service center with id %s not exist!\n", id);
+        }
+
+        return String.format("Service center with id %s  was deleted!\n", id);
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(MethodArgumentNotValidException ex) {
+
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
+    }
 
     @Autowired
     public void setServicesDao(ServicesCenterDao servicesDao) {
@@ -128,11 +187,29 @@ public class ServiceCenterController {
         this.maintenanceDao = maintenanceDao;
     }
 
+    @Autowired
+    public void setCountryDao(CountryDao countryDao) {
+        this.countryDao = countryDao;
+    }
+
+    @Autowired
+    public void setCityDao(CitiesDao cityDao) {
+        this.cityDao = cityDao;
+    }
+
     public ServicesCenterDao getServicesDao() {
         return servicesDao;
     }
 
     public MaintenanceDao getMaintenanceDao() {
         return maintenanceDao;
+    }
+
+    public CitiesDao getCityDao() {
+        return cityDao;
+    }
+
+    public CountryDao getCountryDao() {
+        return countryDao;
     }
 }

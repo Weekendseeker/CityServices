@@ -1,5 +1,5 @@
 package org.marvin.models.responses;
-import org.marvin.models.ServiceCenter;
+import org.marvin.models.entities.ServiceCenter;
 
 import java.util.List;
 

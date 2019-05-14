@@ -1,6 +1,6 @@
 package org.marvin.models.responses;
 
-import org.marvin.models.Maintenance;
+import org.marvin.models.entities.Maintenance;
 
 import java.util.List;
 

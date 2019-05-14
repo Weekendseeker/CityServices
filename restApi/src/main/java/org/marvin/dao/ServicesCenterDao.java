@@ -1,18 +1,17 @@
 package org.marvin.dao;
 
-import org.marvin.models.ServiceCenter;
-
+import org.marvin.models.entities.ServiceCenter;
 import java.util.List;
 
 public interface ServicesCenterDao {
+
     List<ServiceCenter> getAllServiceCenters();
-    List<String> getCities();
-    ServiceCenter getServiceCenterById(int id);
-    List<String> getCountries();
+    ServiceCenter getServiceCenterById(long id);
 
     void createServiceCenter(ServiceCenter serviceCenter);
     void updateServiceCenter(ServiceCenter serviceCenter);
-    void deleteServiceCenter(ServiceCenter serviceCenter);
+    void deleteServiceCenterById(long id);
 
-
+    boolean validateAtributes(ServiceCenter other);
 }
+

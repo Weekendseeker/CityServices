@@ -1,17 +1,18 @@
 package org.marvin.models.responses;
 
-import javax.xml.bind.annotation.XmlRootElement;
+import org.marvin.models.entities.City;
+
 import java.util.List;
 
 public class GetCitiesResponse {
 
-    private List<String> cities;
+    private List<City> cities;
 
-    public List<String> getCities() {
+    public List<City> getCities() {
         return cities;
     }
 
-    public void setCities(List<String> cities) {
+    public void setCities(List<City> cities) {
         this.cities = cities;
     }
 }

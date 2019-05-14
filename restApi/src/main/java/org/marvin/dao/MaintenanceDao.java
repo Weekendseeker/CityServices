@@ -1,15 +1,17 @@
 package org.marvin.dao;
 
-import org.marvin.models.Maintenance;
+import org.marvin.models.entities.Maintenance;
 
 import java.util.List;
 
 public interface MaintenanceDao {
 
-    void create(Maintenance maintenance);
-    Maintenance getServiceById(int id);
-    void update(Maintenance maintenance);
-    void delete(Maintenance maintenance);
-    List<Maintenance> getAllService();
+    List<Maintenance> getAllMaintenancies();
+    Maintenance getMaintenanceById(Long id);
 
+    void insert(Maintenance maintenance);
+    void update(Maintenance maintenance);
+    void deleteById(long id);
+
+    boolean validateAtributes(Maintenance other);
 }
